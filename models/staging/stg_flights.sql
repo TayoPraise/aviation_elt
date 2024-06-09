@@ -1,0 +1,19 @@
+WITH source as (
+    SELECT 
+        FLIGHT_ID 
+        , FLIGHT_NO
+        , AIRCRAFT_CODE
+        , ACTUAL_ARRIVAL
+        , ACTUAL_DEPARTURE
+        , ARRIVAL_AIRPORT
+        , DEPARTURE_AIRPORT
+        , SCHEDULED_ARRIVAL
+        , SCHEDULED_DEPARTURE
+        , STATUS
+    FROM {{ source('TY_AVIATION', 'SRC_FLIGHTS') }}
+)
+
+SELECT 
+    *
+    , CURRENT_TIMESTAMP() INGESTION_TIMESTAMP
+FROM source
