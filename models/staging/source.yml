@@ -1,0 +1,13 @@
+version: 2
+sources:
+  - name: TY_AVIATION
+    schema: SRC_AVIATION
+    tables:
+      - name: SRC_AIRCRAFTS_DATA
+      - name: SRC_SEATS
+      - name: SRC_AIRPORTS_DATA
+      - name: SRC_FLIGHTS
+      - name: SRC_TICKET_FLIGHTS
+      - name: SRC_TICKETS
+      - name: SRC_BOOKINGS
+      - name: SRC_BOARDING_PASSES
