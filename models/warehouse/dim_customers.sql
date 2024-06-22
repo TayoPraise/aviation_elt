@@ -8,7 +8,7 @@ WITH source AS (
         , c.CONTACT_EMAIL
         , MIN(b.BOOK_DATE)::DATE SIGNUP_DATE
         , SUM(tf.amount)::NUMERIC(15,2) CUMULATIVE_PASSENGER_REVENUE
-        , COUNT(t.PASSENGER_ID) NUMBER_OF_TRIPS
+        , COUNT(t.PASSENGER_ID) NUMBER_OF_TRIPS --number of tickets purchased by the customer. Trips serves as moving from Point A to final Point B
         , MAX(b.BOOK_DATE)::DATE MOST_RECENT_TRIP
     FROM {{ ref('stg_customers') }} c
     LEFT JOIN {{ ref('stg_tickets') }} t
