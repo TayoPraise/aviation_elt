@@ -7,11 +7,11 @@ WITH source AS (
             , a.AIRCRAFT_MODEL
             , a.RANGE
             , MIN(f.ACTUAL_DEPARTURE)::DATE FIRST_TRIP_DATE
-            , DATEDIFF(YEAR, MIN(f.ACTUAL_DEPARTURE), MAX(f.ACTUAL_DEPARTURE) ) || ' year(s), ' || 
-                DATEDIFF(MONTH,MIN(f.ACTUAL_DEPARTURE), MAX(f.ACTUAL_DEPARTURE) ) || ' month(s)' AGE_IN_FLEET
+            , FLOOR(DATEDIFF(month, MIN(f.ACTUAL_DEPARTURE), MAX(f.ACTUAL_DEPARTURE)) / 12) || ' year(s), ' || 
+                MOD(DATEDIFF(month, MIN(f.ACTUAL_DEPARTURE), MAX(f.ACTUAL_DEPARTURE)), 12) || ' month(s)' AS AGE_IN_FLEET
             , COUNT(f.ACTUAL_ARRIVAL) NUMBER_OF_TRIPS
             , (COUNT(f.ACTUAL_ARRIVAL) / 300)::NUMERIC NUMBER_OF_MAINTENANCE     -- 300 flights was used based on the Federal Aviation Admin directives
-            , 300 - (COUNT(f.ACTUAL_ARRIVAL) % 300)::NUMERIC FLIGHTS_TO_MAINTENANCE
+            , 300 - (COUNT(f.ACTUAL_ARRIVAL) % 300)::NUMERIC FLIGHTS_TO_NEXT_MAINTENANCE
         FROM {{ ref('stg_aircrafts') }} a
         LEFT JOIN {{ ref('stg_flights') }} f
         USING(AIRCRAFT_CODE)
@@ -36,7 +36,7 @@ WITH source AS (
             , AGE_IN_FLEET
             , NUMBER_OF_TRIPS
             , NUMBER_OF_MAINTENANCE
-            , FLIGHTS_TO_MAINTENANCE
+            , FLIGHTS_TO_NEXT_MAINTENANCE
             , CURRENT_TIMESTAMP() AS INGESTION_TIMESTAMP
         FROM unique_source
         WHERE row_number = 1
