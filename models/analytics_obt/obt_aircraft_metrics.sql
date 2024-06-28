@@ -1,0 +1,33 @@
+WITH flight_revenue AS(
+    SELECT 
+        FLIGHT_ID
+        , AIRCRAFT_ID
+        , STATUS
+        , FARE_CONDITIONS
+        , SUM(AMOUNT)::NUMERIC(15,2) FLIGHT_REVENUE
+    FROM {{ ref('fact_flights') }} f
+    LEFT JOIN {{ ref('fact_tickets') }} ti
+    USING(FLIGHT_ID)
+    GROUP BY 1,2,3,4
+    ORDER BY 1
+    )
+
+SELECT 
+    AIRCRAFT_ID
+    , AIRCRAFT_CODE
+    , AIRCRAFT_MODEL
+    , RANGE
+    , FIRST_TRIP_DATE
+    , AGE_IN_FLEET
+    , NUMBER_OF_TRIPS
+    , NUMBER_OF_MAINTENANCE
+    , FLIGHTS_TO_NEXT_MAINTENANCE
+    , fv.STATUS
+    , fv.FARE_CONDITIONS
+    , SUM(fv.FLIGHT_REVENUE) AIRCRAFT_REVENUE
+    , CURRENT_TIMESTAMP() AS INGESTION_TIMESTAMP
+FROM {{ ref('dim_aircrafts') }} a
+LEFT JOIN flight_revenue fv
+USING(AIRCRAFT_ID)
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11
+ORDER BY 1,10
