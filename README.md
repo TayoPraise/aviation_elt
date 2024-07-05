@@ -112,18 +112,18 @@ In this project, I made use of cloud-based data tools in the modern data stack s
   
 - #### [stg_aviation](models/staging):
     Data cleaning and transformation were primarily conducted in the staging layer. Tasks included:
-      - Text cleaning to select English values from JSON columns containing both English and Russian content.
-      - Creation of surrogate keys for tables due to lengthy and complex natural keys that were not integers.
-      - Separation of the customer table from the fact table (tickets) to accommodate customer dimension metrics.
+     - Text cleaning to select English values from JSON columns containing both English and Russian content.
+     - Creation of surrogate keys for tables due to lengthy and complex natural keys that were not integers.
+     - Separation of the customer table from the fact table (tickets) to accommodate customer dimension metrics.
  <br>
  
 <img width="353" alt="stg_aviation" src="https://github.com/TayoPraise/SQL-Projects/assets/107925747/2a771e0a-ce9e-4298-b903-e786e248e24c">
 
 - #### [dwh_aviation](models/warehouse):
     The data warehouse layer implemented dimensional modeling using the Star schema. It focused on aggregating key metrics:
-      - Financial metrics like cumulative_revenue.
-      - Operational metrics such as age_in_fleet, flight_to_next_maintenance, and number_of_maintenance.
-      - Additionally, dbt tests were developed in this layer to validate data integrity.
+     - Financial metrics like cumulative_revenue.
+     - Operational metrics such as age_in_fleet, flight_to_next_maintenance, and number_of_maintenance.
+     - Additionally, dbt tests were developed in this layer to validate data integrity.
   <br>
  
 <img width="353" alt="dwh_aviation" src="https://github.com/TayoPraise/SQL-Projects/assets/107925747/771137ab-c159-490c-9ab0-341da053985f">
