@@ -1,0 +1,128 @@
+version: 2
+
+models:
+
+  - name: dim_aircrafts
+    description: "Dimension table containing details about aircrafts."
+    columns:
+      - name: AIRCRAFT_ID
+        description: "Unique identifier for each aircraft."
+        tests:
+          - unique
+          - not_null
+      - name: AIRCRAFT_CODE
+        description: "The business key used in the identifying the aircrafts."
+        tests:
+          - unique
+          - not_null
+      - name: FLIGHTS_TO_NEXT_MAINTENANCE
+        description: "Number of flights left before the aircraft is due for maintenance as per FAA standards."
+        tests:
+          - accepted_range:
+              min_value: 0
+              max_value: 300
+
+
+  - name: dim_airports
+    description: "Dimension table containing details about airports."
+    columns:
+      - name: AIRPORT_ID
+        description: "Unique identifier for each airports."
+        tests:
+          - unique
+          - not_null
+      - name: AIRPORT_CODE
+        description: "The business key used in the identifying the airports."
+        tests:
+          - unique
+          - not_null
+      
+
+  - name: dim_customers
+    description: "Dimension table containing details about customers."
+    columns:
+      - name: CUSTOMER_ID
+        description: "Unique identifier for each customers."
+        tests:
+          - unique
+          - not_null
+      - name: PASSENGER_ID
+        description: "The business key used in the identifying the customers"
+        tests:
+          - unique
+          - not_null
+  
+
+  - name: fact_flights
+    description: "Facts table containing details about all flights operations"
+    columns:
+      - name: FLIGHT_ID
+        description: "Unique identifier for each flight."
+        tests:
+          - unique
+          - not_null
+      - name: AIRCRAFT_ID
+        description: "Identifier of the aircraft used for the flight."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_aircrafts')
+              field: AIRCRAFT_ID
+      - name: DEPARTURE_AIRPORT_ID
+        description: "Identifier for the departure airport."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_airports')
+              field: AIRPORT_ID
+      - name: ARRIVAL_AIRPORT_ID
+        description: "Identifier for the arrival airport."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_airports')
+              field: AIRPORT_ID
+      - name: STATUS
+        description: "Current status of the flight."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Arrived', 'Cancelled', 'Delayed', 'Departed', 'Scheduled', 'On Time']
+
+
+  - name: fact_tickets
+    description: "Facts table containing details about all ticket sales"
+    columns:
+      - name: TICKET_ID
+        description: "Unique identifier for each ticket."
+        tests:
+          - not_null
+      - name: FLIGHT_ID
+        description: "Identifier for the flight associated with the ticket."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fact_flights')
+              field: FLIGHT_ID
+      - name: CUSTOMER_ID
+        description: "Identifier for the customer who purchased the ticket."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: CUSTOMER_ID
+      - name: BOOK_DATE
+        description: "Date when the ticket was purchased."
+        tests:
+          - not_null
+      - name: FARE_CONDITIONS
+        description: "Class of the ticket and seating category."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Business', 'Comfort', 'Economy']
+      - name: AMOUNT
+        description: "Price paid for the ticket."
+        tests:
+          - not_null
+              
