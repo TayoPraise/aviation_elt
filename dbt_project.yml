@@ -43,3 +43,5 @@ models:
       +enabled: true
       +materialized: table
       +schema: obt_aviation
+      date_table:
+        +materialized: view
